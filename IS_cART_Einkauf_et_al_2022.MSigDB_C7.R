@@ -84,3 +84,42 @@ df_category_uniq_cART_short_long$condition <- factor(df_category_uniq_cART_short
 pdf("/media/chen/DATA/evoPath/Abb/df_category_C7_uniq_cART_short_long.bar.pdf", height = 5, width = 3.5)  
 ggplot(df_category_uniq_cART_short_long, aes(x = condition, y = percentage, fill = category))+geom_bar(stat = "identity", position = "stack", line = "black")+scale_fill_brewer(type = "seq", palette = "RdYlBu")+theme_bw()+theme(axis.title.x=element_text(size=10), axis.text.x=element_text(size=10, colour = "black",angle=45, vjust=1, hjust = 1), axis.title.y = element_text(size=10),axis.text.y = element_text(size = 10, colour = "black"))
 dev.off()
+
+# 5. Clustering the unique paths from cARAT short & cART long
+category <- c("CD4 T cells", "CD8 T cells", "B cells", "DC/macrophages/monocytes", "plasma cells", "NK cells", "cytokines", "chemokines", "others")
+cART_uniq_C7GS_short <- c(9/42, 9/42, 6/42, 9/42, 1/42, 0/42, 5/42, 0/42, 11/42)
+cART_uniq_C7GS_long <- c(26/130, 11/130, 10/130, 27/130, 1/130, 4/130, 17/130, 3/130, 45/130)
+df_category_uniq_cART_short_long_pair <- data.frame(category, cART_uniq_C7GS_short, cART_uniq_C7GS_long)
+row.names(df_category_uniq_cART_short_long_pair) <- df_category_uniq_cART_short_long_pair$category
+df_category_uniq_cART_short_long_pair$category <- NULL
+df_category_uniq_cART_short_long_pair.mx <- data.matrix(df_category_uniq_cART_short_long_pair, rownames.force = T)
+
+# correlation plot
+df_category_uniq_cART_short_long_pair.cond.co <- round(cor(df_category_uniq_cART_short_long_pair.mx), 1)
+pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cond.co.pdf")  
+ggcorrplot(df_category_uniq_cART_short_long_pair.cond.co, hc.order = TRUE, 
+           type = "lower", 
+           lab = TRUE, 
+           lab_size = 3, 
+           method="circle", 
+           colors = c("tomato2", "white","springgreen3"), 
+           ggtheme=theme_bw)
+dev.off()
+
+pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cells.co.pdf")
+df_category_uniq_cART_short_long_pair.cells.co <- round(cor(t(df_category_uniq_cART_short_long_pair.mx)), 1)
+ggcorrplot(scale(df_category_uniq_cART_short_long_pair.cells.co), hc.order = TRUE, 
+           type = "lower", 
+           lab = TRUE, 
+           lab_size = 3, 
+           method="circle", 
+           colors = c("tomato2", "white","springgreen3"), 
+           ggtheme=theme_bw)
+dev.off()
+
+#PCA
+df_category_uniq_cART_short_long_pair.mx.pca <- PCA(df_category_uniq_cART_short_long_pair.mx, graph = F)
+eig.val <- get_eigenvalue(df_category_uniq_cART_short_long_pair.mx.pca)
+pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cells.pca.pdf")
+fviz_pca_ind(df_category_uniq_cART_short_long_pair.mx.pca, pointsize = "cos2", pointshape = 21, fill = "#E7B800", repel = T)
+dev.off()
