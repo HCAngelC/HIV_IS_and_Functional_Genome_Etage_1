@@ -61,3 +61,26 @@ TRUE, scaled = TRUE, lwd = rep(2, 3), lty =
 rep("solid", 3), col = rep("black", 3), fill = NULL,
 alpha = rep(0.5, 3), label.col = rep("black", 7))
 dev.off()
+
+# 3. r unique C7 GS
+msigdb_c7_cART_short_uniq <- dplyr::anti_join(msigdb_c7_cART_short.key, msigdb_c7_cART_long.key, by = "ID")
+msigdb_c7_cART_short_uniq <- dplyr::anti_join(msigdb_c7_cART_short_uniq, msigdb_c7_cART_untreat.key, by = "ID")
+write.table(msigdb_c7_cART_short_uniq, file = "/media/chen/DATA/evoPath/df/C7/msigdb_c7_cART_short_uniq.txt", row.names = F, col.names = T, sep = "\t", quote = F)
+
+msigdb_c7_cART_long_uniq <- dplyr::anti_join(msigdb_c7_cART_long.key, msigdb_c7_cART_short.key, by = "ID")
+msigdb_c7_cART_long_uniq <- dplyr::anti_join(msigdb_c7_cART_long_uniq, msigdb_c7_cART_untreat.key, by = "ID")
+write.table(msigdb_c7_cART_long_uniq, file = "/media/chen/DATA/evoPath/df/C7/msigdb_c7_cART_long_uniq.txt", row.names = F, col.names = T, sep = "\t", quote = F)
+
+# 4. categorize the unique paths from cARAT short & cART long
+category <- c("CD4 T cells", "CD8 T cells", "B cells", "DC/macrophages/monocytes", "plasma cells", "NK cells", "cytokines", "chemokines", "others")
+percentage <- c(9/42, 9/42, 6/42, 9/42, 1/42, 0/42, 5/42, 0/42, 11/42, 26/130, 11/130, 10/130, 27/130, 1/130, 4/130, 17/130, 3/130, 45/130)
+condition <- c(rep("cART short", 9), rep("cART long", 9))
+
+df_category_uniq_cART_short_long <- data.frame(category, percentage, condition)
+
+deposer_cond <- c("cART short", "cART long")
+df_category_uniq_cART_short_long$condition <- factor(df_category_uniq_cART_short_long$condition, levels = deposer_cond)
+
+pdf("/media/chen/DATA/evoPath/Abb/df_category_C7_uniq_cART_short_long.bar.pdf", height = 5, width = 3.5)  
+ggplot(df_category_uniq_cART_short_long, aes(x = condition, y = percentage, fill = category))+geom_bar(stat = "identity", position = "stack", line = "black")+scale_fill_brewer(type = "seq", palette = "RdYlBu")+theme_bw()+theme(axis.title.x=element_text(size=10), axis.text.x=element_text(size=10, colour = "black",angle=45, vjust=1, hjust = 1), axis.title.y = element_text(size=10),axis.text.y = element_text(size = 10, colour = "black"))
+dev.off()
