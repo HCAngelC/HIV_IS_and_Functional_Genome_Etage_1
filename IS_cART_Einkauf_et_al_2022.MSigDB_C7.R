@@ -123,3 +123,15 @@ eig.val <- get_eigenvalue(df_category_uniq_cART_short_long_pair.mx.pca)
 pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cells.pca.pdf")
 fviz_pca_ind(df_category_uniq_cART_short_long_pair.mx.pca, pointsize = "cos2", pointshape = 21, fill = "#E7B800", repel = T)
 dev.off()
+
+# Slope plot
+cART_uniq_C7GS_short <- c(9/42, 9/42, 6/42, 9/42, 1/42, 0/42, 5/42, 0/42, 11/42)
+cART_uniq_C7GS_long <- c(26/130, 11/130, 10/130, 27/130, 1/130, 4/130, 17/130, 3/130, 45/130)
+df_category_uniq_cART_short_long_pair <- data.frame(category, cART_uniq_C7GS_short, cART_uniq_C7GS_long)
+
+left_label <- paste(df_category_uniq_cART_short_long_pair$category)
+right_label <- paste(df_category_uniq_cART_short_long_pair$category)
+
+pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cells.slop.pdf")
+ggplot(df_category_uniq_cART_short_long_pair, aes(x = 1, xend = 2 , y = cART_uniq_C7GS_short, yend = cART_uniq_C7GS_long, col = category), size = .75, show.legend = F)+geom_segment()+theme_bw()+geom_vline(xintercept=1, linetype="dashed", size=.1)+geom_vline(xintercept=2, linetype="dashed", size=.1)+scale_color_manual(labels = c("Up", "Down"), values = c("green"="#00ba38", "red"="#f8766d"))+labs(x = "", y = "Frequency of terms found in pathways")+xlim(.5, 2.5) + ylim(0,(1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long))))+geom_text(label=left_label, y=df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, x=rep(1, NROW(df_category_uniq_cART_short_long_pair)), hjust=1.1, size=3.5)+geom_text(label=right_label, y=df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long, x=rep(2, NROW(df_category_uniq_cART_short_long_pair)), hjust=-0.1, size=3.5)+geom_text(label="cART short", x=1, y=1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long)), hjust=1.2, size=5)+geom_text(label="cART long", x=2, y=1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long)), hjust=-0.1, size=5)+theme(panel.background = element_blank(), panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank(), panel.border = element_blank(), plot.margin = unit(c(1,2,1,2), "cm"), legend.position = "none")
+dev.off()
