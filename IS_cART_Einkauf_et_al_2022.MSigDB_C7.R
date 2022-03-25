@@ -1,3 +1,4 @@
+# 1. C7 immunological terms enrichment
 m_df <- msigdbr(species = "Homo sapiens")
 
 m_tC7 <- msigdbr(species = "Homo sapiens", category = "C7") %>% dplyr::select(gs_name, entrez_gene)
@@ -44,4 +45,19 @@ msigdb_cART_tous.ID.Ratio.mx <- data.matrix(msigdb_cART_tous.ID.Ratio, rownames.
 
 pdf("/media/chen/DATA/evoPath/Abb/msigdb_cART_evolution_pathway.pdf")  
 Heatmap(msigdb_cART_tous.ID.Ratio.mx, name = "GeneRatio/BgRatio", rect_gp = gpar(col = "white", lwd = 0.5), column_title = "clinical condition", row_title = "C7: immunologic signatures", column_title_side = "bottom", row_dend_width = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10), row_km = 5)
+dev.off()
+
+# 2. Pathway overlapped
+overlap_cART_c7_short_long <- merge(msigdb_c7_cART_short.key, msigdb_c7_cART_long.key, by = "ID")
+count_n123 <- dim(merge(overlap_cART_c7_short_long, msigdb_c7_cART_untreat.key, by = "ID"))[1]
+
+count_n12 <- dim(merge(msigdb_c7_cART_untreat.key, msigdb_c7_cART_short.key, by = "ID"))[1]
+count_n23 <- dim(merge(msigdb_c7_cART_short.key, msigdb_c7_cART_long.key, by = "ID"))[1]
+count_n13 <- dim(merge(msigdb_c7_cART_untreat.key, msigdb_c7_cART_long.key, by = "ID"))[1]
+
+pdf("/media/chen/DATA/evoPath/Abb/msigdb_cART_c7_venn_diagram.pdf")  
+draw.triple.venn(dim(msigdb_c7_cART_untreat.key)[1], dim(msigdb_c7_cART_short.key)[1], dim(msigdb_c7_cART_long.key)[1], count_n12, count_n23, count_n13, count_n123, category = c("untreat", "short", "long"), rotation = 1, reverse = FALSE, euler.d =
+TRUE, scaled = TRUE, lwd = rep(2, 3), lty =
+rep("solid", 3), col = rep("black", 3), fill = NULL,
+alpha = rep(0.5, 3), label.col = rep("black", 7))
 dev.off()
