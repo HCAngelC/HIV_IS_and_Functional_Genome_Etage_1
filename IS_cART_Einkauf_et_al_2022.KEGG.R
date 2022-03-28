@@ -3,6 +3,8 @@ cART_untreat <- read.table("/media/chen/DATA/evoPath/df/IS_cART_Einkauf_et_al_20
 cART_short <- read.table("/media/chen/DATA/evoPath/df/IS_cART_Einkauf_et_al_2022/IS_short_cART.csv", header = F, stringsAsFactors = F) %>% unique()
 cART_long <- read.table("/media/chen/DATA/evoPath/df/IS_cART_Einkauf_et_al_2022/IS_long_cART.csv", header = F, stringsAsFactors = F) %>% unique()
 
+long_term_EC <- read.table("/media/chen/DATA/evoPath/df/IS_long_term_EC/IS_Jiang_et_al_2021_annotation.txt", header = F, stringsAsFactors = F) %>% dplyr::select(V7) %>% unique()
+
 ### 2. obtenir ENTREZID ###
 cART_untreat$V1 <- as.character(cART_untreat$V1)
 cART_untreat.enID <- bitr(cART_untreat$V1, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
@@ -12,6 +14,9 @@ cART_short.enID <- bitr(cART_short$V1, fromType="SYMBOL", toType=c("ENSEMBL", "E
 
 cART_long$V1 <- as.character(cART_long$V1)
 cART_long.enID <- bitr(cART_long$V1, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
+
+long_term_EC$V7 <- as.character(long_term_EC$V7)
+long_term_EC.enID <- bitr(long_term_EC$V7, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
 
 ### 3. faire des lists des ENTRZID & comparaison GO & KEGG ###
 List_tous_cART <- list(untreat_cART = cART_untreat.enID$ENTREZID,  short_cART = cART_short.enID$ENTREZID, long_cART = cART_long.enID$ENTREZID)
