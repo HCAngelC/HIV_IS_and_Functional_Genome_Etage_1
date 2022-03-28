@@ -196,3 +196,14 @@ right_label <- paste(df_category_uniq_cART_short_long_pair$category)
 pdf("/media/chen/DATA/evoPath/Abb/df_category_uniq_cART_short_long_pair.cells.slop.pdf")
 ggplot(df_category_uniq_cART_short_long_pair, aes(x = 1, xend = 2 , y = cART_uniq_C7GS_short, yend = cART_uniq_C7GS_long, col = category), size = .75, show.legend = F)+geom_segment()+theme_bw()+geom_vline(xintercept=1, linetype="dashed", size=.1)+geom_vline(xintercept=2, linetype="dashed", size=.1)+scale_color_manual(labels = c("Up", "Down"), values = c("green"="#00ba38", "red"="#f8766d"))+labs(x = "", y = "Frequency of terms found in pathways")+xlim(.5, 2.5) + ylim(0,(1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long))))+geom_text(label=left_label, y=df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, x=rep(1, NROW(df_category_uniq_cART_short_long_pair)), hjust=1.1, size=3.5)+geom_text(label=right_label, y=df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long, x=rep(2, NROW(df_category_uniq_cART_short_long_pair)), hjust=-0.1, size=3.5)+geom_text(label="cART short", x=1, y=1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long)), hjust=1.2, size=5)+geom_text(label="cART long", x=2, y=1.1*(max(df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_short, df_category_uniq_cART_short_long_pair$cART_uniq_C7GS_long)), hjust=-0.1, size=5)+theme(panel.background = element_blank(), panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank(), panel.border = element_blank(), plot.margin = unit(c(1,2,1,2), "cm"), legend.position = "none")
 dev.off()
+
+# 6. r clustering cytokines
+cART_EC_cytokines_used <- read.table("/media/chen/DATA/evoPath/df/C7/c7_cART_EC_pt_cytokines.tsv", header = T, stringsAsFactors = F)
+rownames(cART_EC_cytokines_used) <- cART_EC_cytokines_used$Cytokine
+cART_EC_cytokines_used$Cytokine <- NULL
+cART_EC_cytokines_used.mx <- data.matrix(cART_EC_cytokines_used, rownames.force = T)
+
+# heatmap
+pdf("/media/chen/DATA/evoPath/Abb/msigdb_cART_EC_pt_cytokines_used.pdf", height = 5, width = 4)  
+Heatmap(cART_EC_cytokines_used.mx, name = "Frequency", rect_gp = gpar(col = "white", lwd = 0.5), column_title = "clinical condition", row_title = "Cytokines", column_title_side = "bottom", row_dend_width = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10), row_km = 4)
+dev.off()
