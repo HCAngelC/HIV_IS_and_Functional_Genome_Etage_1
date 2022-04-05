@@ -1,0 +1,30 @@
+cART_short_TGFB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_short_TGFB_gene_list.rtf", header = F, stringsAsFactors = T)
+cART_long_TGFB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_long_TGFB.rtf", header = F, stringsAsFactors = T)
+cART_short_long_TGFB <- dplyr::bind_rows(cART_short_TGFB, cART_long_TGFB) %>% unique()
+
+cART_short_IFNB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_short_IFNB.rtf", header = F, stringsAsFactors = T)
+cART_long_IFNB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_long_IFNB.rtf", header = F, stringsAsFactors = T)
+cART_short_long_IFNB <- dplyr::bind_rows(cART_short_IFNB, cART_long_IFNB) %>% unique()
+
+cART_short_IFNG <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_short_IFNG.rtf", header = F, stringsAsFactors = T)
+cART_long_IFNG <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/cART_long_IFNG_gene_list.rtf", header = F, stringsAsFactors = T)
+cART_short_long_IFNG <- dplyr::bind_rows(cART_short_IFNG, cART_long_IFNG) %>% unique()
+
+cART_short_IL10 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_short_IL10.rtf", header = F, stringsAsFactors = T)
+cART_long_IL10 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_long_IL10.rtf", header = F, stringsAsFactors = T)
+cART_short_long_IL10 <- dplyr::bind_rows(cART_short_IL10, cART_long_IL10) %>% unique()
+
+cART_short_FOXP3 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_short_FOXP3.rtf", header = F, stringsAsFactors = T)
+cART_long_FOXP3 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/c7_cART_long_FOXP3.rtf", header = F, stringsAsFactors = T)
+cART_short_long_FOXP3 <- dplyr::bind_rows(cART_short_FOXP3, cART_long_FOXP3) %>% unique()
+
+signal <- c("TGFB", "IFNB", "IFNG", "IL10", "FOXP3")
+count_GW_cART_short <- c(dim(cART_short_TGFB)[1], dim(cART_short_IFNB)[1], dim(cART_short_IFNG)[1], dim(cART_short_IL10)[1], dim(cART_short_FOXP3)[1])
+count_GW_cART_long <- c(dim(cART_long_TGFB)[1], dim(cART_long_IFNB)[1], dim(cART_long_IFNG)[1], dim(cART_long_IL10)[1], dim(cART_long_FOXP3)[1])
+GS_weight <- c(5, 2, 7, 2, 3)
+
+df_cluster_2_bubble <- data.frame(signal, count_GW_cART_short, count_GW_cART_long, GS_weight)
+
+pdf("/media/chen/DATA/evoPath/Abb/df_cluster_2_bubble.pdf", height = 4, width = 4) 
+ggplot(df_cluster_2_bubble, aes(x = count_GW_cART_short, y = count_GW_cART_long, size = GS_weight, color = signal))+geom_point(alpha = 0.8)+scale_size(range = c(1, 6), name = "GS weight")+theme_bw()+xlim(6.5, 8.5)+ylim(0, 40)+labs(x = "Gene count (cART short treatment)", y = "Gene count (cART long treatment)")+scale_color_brewer(type = "seq", palette = "RdYlBu")+theme_bw()+theme(axis.title.x=element_text(size=10), axis.text.x=element_text(size=10, colour = "black",angle=0, hjust = 0), axis.title.y = element_text(size=10),axis.text.y = element_text(size = 10, colour = "black"))
+dev.off()
