@@ -1,0 +1,62 @@
+#Clustering between the clinical condition and KEGG pathway ID
+c7_kegg_short_TGFB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_short_TGFB.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "short", signal = "TGFB", count = 1)
+c7_kegg_long_TGFB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_long_TGFB.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "long", signal = "TGFB", count = 1)
+
+c7_kegg_short_IFNB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_short_IFNB.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "short", signal = "IFNB", count = 1)
+c7_kegg_long_IFNB <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_long_IFNB.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "long", signal = "IFNB", count = 1)
+
+c7_kegg_short_IFNG <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_short_IFNG.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "short", signal = "IFNG", count = 1)
+c7_kegg_long_IFNG <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_long_IFNG.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "long", signal = "IFNG", count = 1)
+
+c7_kegg_short_IL10 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_short_IL10.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "short", signal = "IL10", count = 1)
+c7_kegg_long_IL10 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_long_IL10.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "long", signal = "IL10", count = 1)
+
+c7_kegg_short_FOXP3 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_short_FOXP3.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "short", signal = "FOXP3", count = 1)
+c7_kegg_long_FOXP3 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_2/KEGG_dans_C7/c7_kegg_long_FOXP3.csv", header = T, stringsAsFactors = F) %>% dplyr::mutate(period = "long", signal = "FOXP3", count = 1)
+
+c7_kegg_short_ID <- dplyr::bind_rows(c7_kegg_short_TGFB, c7_kegg_short_IFNB, c7_kegg_short_IFNG, c7_kegg_short_IL10, c7_kegg_short_FOXP3) %>% dplyr::select(ID, count)
+c7_kegg_short_ID.agg <- aggregate(count ~ ID, FUN = sum, data = c7_kegg_short_ID) %>% dplyr::mutate(period = "short")
+c7_kegg_long_ID <- dplyr::bind_rows(c7_kegg_long_TGFB, c7_kegg_long_IFNB, c7_kegg_long_IFNG, c7_kegg_long_IL10, c7_kegg_long_FOXP3) %>% dplyr::select(ID, count)
+c7_kegg_long_ID.agg <- aggregate(count ~ ID, FUN = sum, data = c7_kegg_long_ID) %>% dplyr::mutate(period = "long")
+
+tous_term_ID_short_long <- dplyr::bind_rows(c7_kegg_short_ID, c7_kegg_long_ID) %>% dplyr::select(ID) %>% unique()
+c7_kegg_short_ID.agg.avec <- dplyr::inner_join(c7_kegg_short_ID.agg, tous_term_ID_short_long, by = "ID") %>% dplyr::rename(count_short = count) %>% dplyr::select(ID, count_short)
+c7_kegg_short_ID.agg.sans <- dplyr::anti_join(tous_term_ID_short_long, c7_kegg_short_ID.agg, by = "ID") %>% dplyr::mutate(count_short = 0)
+c7_kegg_short_ID.agg.tous <- dplyr::bind_rows(c7_kegg_short_ID.agg.avec, c7_kegg_short_ID.agg.sans) %>% arrange(desc(ID))
+c7_kegg_long_ID.agg.avec <- dplyr::inner_join(c7_kegg_long_ID.agg, tous_term_ID_short_long, by = "ID") %>% dplyr::rename(count_long = count) %>% dplyr::select(ID, count_long)
+c7_kegg_long_ID.agg.sans <- dplyr::anti_join(tous_term_ID_short_long, c7_kegg_long_ID.agg, by = "ID") %>% dplyr::mutate(count_long = 0)
+c7_kegg_long_ID.agg.tous <- dplyr::bind_rows(c7_kegg_long_ID.agg.avec, c7_kegg_long_ID.agg.sans) %>% arrange(desc(ID))
+c7_kegg_tous_ID.agg.tous <- dplyr::bind_cols(c7_kegg_short_ID.agg.tous, c7_kegg_long_ID.agg.tous) %>% dplyr::select(ID...1, count_short, count_long)
+row.names(c7_kegg_tous_ID.agg.tous) <- c7_kegg_tous_ID.agg.tous$ID...1
+c7_kegg_tous_ID.agg.tous$ID...1 <- NULL
+c7_kegg_tous_ID.agg.tous.mx <- data.matrix(c7_kegg_tous_ID.agg.tous, rownames.force = T)
+
+pdf("/media/chen/DATA/evoPath/Abb/c7_kegg_tous_ID.agg.tous.mx.pdf", height = 15, width = 4)  
+col_c7_kegg_ID <- colorRamp2(c(0, 4), c("grey", "Blue"))
+Heatmap(c7_kegg_tous_ID.agg.tous.mx, name = "Frequency", col = col_c7_kegg_ID, rect_gp = gpar(col = "white", lwd = 0.1), column_title = "clinical condition", row_title = "KEGG pathways", column_title_side = "bottom", row_dend_width = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), show_column_dend = FALSE, column_names_gp = gpar(fontsize = 10), row_km = 6)
+dev.off()
+
+#Clustering between the clinical condition and KEGG subcategories
+c7_kegg_short_subcat <- dplyr::bind_rows(c7_kegg_short_TGFB, c7_kegg_short_IFNB, c7_kegg_short_IFNG, c7_kegg_short_IL10, c7_kegg_short_FOXP3) %>% dplyr::select(KEGG_subcat, count)
+c7_kegg_short_subcat.agg <- aggregate(count ~ KEGG_subcat, FUN = sum, data = c7_kegg_short_subcat) %>% dplyr::mutate(period = "short")
+c7_kegg_long_subcat <- dplyr::bind_rows(c7_kegg_long_TGFB, c7_kegg_long_IFNB, c7_kegg_long_IFNG, c7_kegg_long_IL10, c7_kegg_long_FOXP3) %>% dplyr::select(KEGG_subcat, count)
+c7_kegg_long_subcat.agg <- aggregate(count ~ KEGG_subcat, FUN = sum, data = c7_kegg_long_subcat) %>% dplyr::mutate(period = "long")
+
+tous_term_KEGG_subcat_short_long <- dplyr::bind_rows(c7_kegg_short_subcat, c7_kegg_long_subcat) %>% dplyr::select(KEGG_subcat) %>% unique()
+c7_kegg_short_subcat.agg.avec <- dplyr::inner_join(c7_kegg_short_subcat.agg, tous_term_KEGG_subcat_short_long, by = "KEGG_subcat") %>% dplyr::rename(count_short = count) %>% dplyr::select(KEGG_subcat, count_short)
+c7_kegg_short_subcat.agg.sans <- dplyr::anti_join(tous_term_KEGG_subcat_short_long, c7_kegg_short_subcat.agg, by = "KEGG_subcat") %>% dplyr::mutate(count_short = 0)
+c7_kegg_short_subcat.agg.tous <- dplyr::bind_rows(c7_kegg_short_subcat.agg.avec, c7_kegg_short_subcat.agg.sans) %>% arrange(desc(KEGG_subcat))
+
+c7_kegg_long_subcat.agg.avec <- dplyr::inner_join(c7_kegg_long_subcat.agg, tous_term_KEGG_subcat_short_long, by = "KEGG_subcat") %>% dplyr::rename(count_long = count) %>% dplyr::select(KEGG_subcat, count_long)
+c7_kegg_long_subcat.agg.sans <- dplyr::anti_join(tous_term_KEGG_subcat_short_long, c7_kegg_long_subcat.agg, by = "KEGG_subcat") %>% dplyr::mutate(count_long = 0)
+c7_kegg_long_subcat.agg.tous <- dplyr::bind_rows(c7_kegg_long_subcat.agg.avec, c7_kegg_long_subcat.agg.sans) %>% arrange(desc(KEGG_subcat))
+c7_kegg_tous_subcat.agg.tous <- dplyr::bind_cols(c7_kegg_short_subcat.agg.tous, c7_kegg_long_subcat.agg.tous) %>% dplyr::select(KEGG_subcat...1, count_short, count_long)
+
+row.names(c7_kegg_tous_subcat.agg.tous) <- c7_kegg_tous_subcat.agg.tous$KEGG_subcat...1
+c7_kegg_tous_subcat.agg.tous$KEGG_subcat...1 <- NULL
+c7_kegg_tous_subcat.agg.tous.mx <- data.matrix(c7_kegg_tous_subcat.agg.tous, rownames.force = T)
+
+pdf("/media/chen/DATA/evoPath/Abb/c7_kegg_tous_subcat.agg.tous.mx.pdf", width = 6)  
+col_c7_kegg_subcat <- colorRamp2(c(0, 10, 20, 30, 40), c("Grey", "Blue", "Green", "#CCCC99","Yellow"))
+Heatmap(c7_kegg_tous_subcat.agg.tous.mx, name = "Frequency", col = col_c7_kegg_subcat, rect_gp = gpar(col = "white", lwd = 0.1), column_title = "clinical condition", row_title = "KEGG subcategories", column_title_side = "bottom", row_dend_width  = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), show_column_dend = FALSE, column_names_gp = gpar(fontsize = 10), row_km = 6)
+dev.off()
