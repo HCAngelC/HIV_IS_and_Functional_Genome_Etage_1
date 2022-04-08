@@ -1,4 +1,13 @@
-********************************************************************
+##############################################################
+# Author: Heng-Chang Chen
+# Date: March 2022
+##############################################################
+# Input: 
+# Object:  
+# ->
+##############################################################
+# Custom R functions
+**************************************************************
 calculation_KEGG_subcategory_pour_matrix <- function(df, ref) {
   df <- df %>% dplyr::select(KEGG_subcat, count)
   df.agg <- aggregate(count ~ KEGG_subcat, data = df, FUN = sum)
@@ -8,7 +17,7 @@ calculation_KEGG_subcategory_pour_matrix <- function(df, ref) {
   
   return(df.tous)
 }
-*********************************************************************
+****************************************************************
 tous_term_KEGG_subcat <- dplyr::bind_rows(c7_kegg_short_TGFB, c7_kegg_long_TGFB, c7_kegg_short_IFNB, c7_kegg_long_IFNB, c7_kegg_short_IFNG, c7_kegg_long_IFNG, c7_kegg_short_IL10, c7_kegg_long_IL10, c7_kegg_short_IFNB, c7_kegg_long_FOXP3) %>% dplyr::select(KEGG_subcat) %>% unique()
 
 
