@@ -1,4 +1,13 @@
-***************************************************************
+##############################################################
+# Author: Heng-Chang Chen
+# Date: March 2022
+##############################################################
+# Input: 
+# Object:  
+# ->
+##############################################################
+# Custom R functions
+**************************************************************
 calculation_KEGG_subcategory <- function(df_short, df_long) {
   df_short <- dplyr::select(df_short, KEGG_subcat, count)
   df_short.agg <- aggregate(count ~ KEGG_subcat, data = df_short, FUN = sum) %>% dplyr::mutate(percent = (count/dim(df_short)[1])*100, period = "short")
@@ -9,7 +18,7 @@ calculation_KEGG_subcategory <- function(df_short, df_long) {
   
   df_tous <- dplyr::bind_rows(df_short.agg, df_long.agg)
 }
-***************************************************************
+**************************************************************
 
 calcu_KEGG_subcat_TGFB <- calculation_KEGG_subcategory(c7_kegg_short_TGFB, c7_kegg_long_TGFB) %>% dplyr::mutate(signal = "TGFB")
 calcu_KEGG_subcat_IFNB <- calculation_KEGG_subcategory(c7_kegg_short_IFNB, c7_kegg_long_IFNB) %>% dplyr::mutate(signal = "IFNB")
