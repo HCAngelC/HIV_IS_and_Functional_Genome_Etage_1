@@ -8,7 +8,15 @@ c7_kegg_subcat_long_IL2 <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster
 c7_kegg_subcat_long_IFNA <- read.table("/media/chen/DATA/evoPath/df/C7/df_cluster_3/KEGG_dans_C7/kegg_c7_long_cluster_3_IFNA.csv", header = T, stringsAsFactors = F)
 
 # 2. heatmap signal vs KEGG_subcat
-tous_term_KEGG_subcat_cluster_3 <- dplyr::bind_rows(c7_kegg_subcat_long_CXCL4, c7_kegg_subcat_long_IL18, c7_kegg_subcat_long_IL15, c7_kegg_subcat_long_IL7, c7_kegg_subcat_long_IL1, c7_kegg_subcat_long_IL2, c7_kegg_subcat_long_IFNA) %>% select(KEGG_subcat) %>% unique()
+##############################################################
+# Author: Heng-Chang Chen
+# Date: April 2022
+##############################################################
+# Input: dataframe containing each enriched hsa ID, KEGG subcategory & count number
+# Object: generate the matrix to plot the clustering heatmap
+##############################################################
+# Custom R functions
+**************************************************************
 
 make_matrix_kegg_subcat_cluster_3 <- function(df, ref) {
   df <- df %>% dplyr::select(KEGG_subcat, count)
@@ -21,6 +29,8 @@ make_matrix_kegg_subcat_cluster_3 <- function(df, ref) {
   
   return(df.tous)
 }
+**************************************************************
+tous_term_KEGG_subcat_cluster_3 <- dplyr::bind_rows(c7_kegg_subcat_long_CXCL4, c7_kegg_subcat_long_IL18, c7_kegg_subcat_long_IL15, c7_kegg_subcat_long_IL7, c7_kegg_subcat_long_IL1, c7_kegg_subcat_long_IL2, c7_kegg_subcat_long_IFNA) %>% select(KEGG_subcat) %>% unique()
 
 c7_kegg_tous_subcat_long_CXCL4 <- make_matrix_kegg_subcat_cluster_3(c7_kegg_subcat_long_CXCL4, tous_term_KEGG_subcat_cluster_3) %>% dplyr::rename(CXCL4 = count)
 c7_kegg_tous_subcat_long_IL18 <- make_matrix_kegg_subcat_cluster_3(c7_kegg_subcat_long_IL18, tous_term_KEGG_subcat_cluster_3) %>% dplyr::rename(IL18 = count)
