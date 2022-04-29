@@ -33,10 +33,10 @@ calcu_KEGG_subcat_IFNG_long <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_
 calcu_KEGG_subcat_IL10_short <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_short_IL10, tous_term_KEGG_subcat) %>% dplyr::rename(IL10_short = count)
 calcu_KEGG_subcat_IL10_long <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_long_IL10, tous_term_KEGG_subcat) %>% dplyr::rename(IL10_long = count)
 
-calcu_KEGG_subcat_FOXP3_short <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_short_FOXP3, tous_term_KEGG_subcat) %>% dplyr::rename(FOXP3_short = count)
-calcu_KEGG_subcat_FOXP3_long <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_long_FOXP3, tous_term_KEGG_subcat) %>% dplyr::rename(FOXP3_long = count)
+calcu_KEGG_subcat_CXCR5_short <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_short_CXCR5, tous_term_KEGG_subcat) %>% dplyr::rename(CXCR5_short = count)
+calcu_KEGG_subcat_CXCR5_long <- calculation_KEGG_subcategory_pour_matrix(c7_kegg_long_CXCR5, tous_term_KEGG_subcat) %>% dplyr::rename(CXCR5_long = count)
 
-df_calcu_KEGG_subcat_tous_short_long <- dplyr::bind_cols(calcu_KEGG_subcat_TGFB_short, calcu_KEGG_subcat_TGFB_long, calcu_KEGG_subcat_IFNB_short, calcu_KEGG_subcat_IFNB_long, calcu_KEGG_subcat_IFNG_short, calcu_KEGG_subcat_IFNG_long, calcu_KEGG_subcat_IL10_short, calcu_KEGG_subcat_IL10_long, calcu_KEGG_subcat_FOXP3_short, calcu_KEGG_subcat_FOXP3_long) %>% dplyr::select(KEGG_subcat...1, TGFB_short, TGFB_long, IFNB_short, IFNB_long, IFNG_short, IFNG_long, IL10_short, IL10_long, FOXP3_short, FOXP3_long)
+df_calcu_KEGG_subcat_tous_short_long <- dplyr::bind_cols(calcu_KEGG_subcat_TGFB_short, calcu_KEGG_subcat_TGFB_long, calcu_KEGG_subcat_IFNB_short, calcu_KEGG_subcat_IFNB_long, calcu_KEGG_subcat_IFNG_short, calcu_KEGG_subcat_IFNG_long, calcu_KEGG_subcat_IL10_short, calcu_KEGG_subcat_IL10_long, calcu_KEGG_subcat_CXCR5_short, calcu_KEGG_subcat_CXCR5_long) %>% dplyr::select(KEGG_subcat...1, TGFB_short, TGFB_long, IFNB_short, IFNB_long, IFNG_short, IFNG_long, IL10_short, IL10_long, CXCR5_short, CXCR5_long)
 
 row.names(df_calcu_KEGG_subcat_tous_short_long) <- df_calcu_KEGG_subcat_tous_short_long$KEGG_subcat...1
 df_calcu_KEGG_subcat_tous_short_long$KEGG_subcat...1 <- NULL
@@ -45,5 +45,5 @@ df_calcu_KEGG_subcat_tous_short_long.mx <- data.matrix(df_calcu_KEGG_subcat_tous
 
 pdf("/media/chen/DATA/evoPath/Abb/df_calcu_KEGG_subcat_tous_short_long.mx.pdf", height = 5.5, width = 7)  
 #col_c7_kegg_subcat <- colorRamp2(c(0, 10, 20, 30, 40), c("Grey", "Blue", "Green", "#CCCC99","Yellow"))
-Heatmap(df_calcu_KEGG_subcat_tous_short_long.mx, name = "Frequency", rect_gp = gpar(col = "white", lwd = 0.1), column_title = "signal", row_title = "KEGG subcategories", column_title_side = "bottom", row_dend_width  = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10), row_km = 6)
+Heatmap(df_calcu_KEGG_subcat_tous_short_long.mx, name = "Frequency", rect_gp = gpar(col = "black", lwd = 0.1), column_title = "signal", row_title = "KEGG subcategories", column_title_side = "bottom", row_dend_width  = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10))
 dev.off()
