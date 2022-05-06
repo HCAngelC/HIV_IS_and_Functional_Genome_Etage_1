@@ -139,15 +139,3 @@ c7_EC_long_uniq <- dplyr::anti_join(msigdb_c7_EC_long.key, msigdb_c7_cART_untrea
 c7_EC_long_uniq <- dplyr::anti_join(c7_EC_long_uniq, msigdb_c7_cART_short.key, by = "ID")
 c7_EC_long_uniq <- dplyr::anti_join(c7_EC_long_uniq, msigdb_c7_cART_long.key, by = "ID")
 write.table(c7_EC_long_uniq, file = "/media/chen/DATA/evoPath/df/C7/c7_EC_long_uniq.txt", row.names = F, col.names = T, sep = "\t", quote = F)
-
-
-# 6. r clustering cytokines
-cART_EC_cytokines_used <- read.table("/media/chen/DATA/evoPath/df/C7/c7_cART_EC_pt_cytokines.tsv", header = T, stringsAsFactors = F)
-rownames(cART_EC_cytokines_used) <- cART_EC_cytokines_used$Cytokine
-cART_EC_cytokines_used$Cytokine <- NULL
-cART_EC_cytokines_used.mx <- data.matrix(cART_EC_cytokines_used, rownames.force = T)
-
-# heatmap
-pdf("/media/chen/DATA/evoPath/Abb/msigdb_cART_EC_pt_cytokines_used.pdf", height = 5, width = 4)  
-Heatmap(cART_EC_cytokines_used.mx, name = "Frequency", rect_gp = gpar(col = "white", lwd = 0.5), column_title = "clinical condition", row_title = "Cytokines", column_title_side = "bottom", row_dend_width = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10), row_km = 4)
-dev.off()
