@@ -1,5 +1,12 @@
-
-
+##############################################################
+# Author: Heng-Chang Chen
+# Date: June 2022
+##############################################################
+# Input: dataframes: lsit of genes in each top 4 KEGG classification, list of HIV-1-targeted genes in cART (untreated), cART (short), cART (long) and long-term EC.
+# Object: Heatmap representation of the genes involved in top 4 KEGG classifications in each patient type
+##############################################################
+# Custom R functions
+**************************************************************
 fish_gens_dans_les_patients <- function(df_input, df_cART_ut, df_cART_st, df_cART_lt, df_ec) {
   df_input <- df_input %>% dplyr::select(Gene_name) %>% dplyr::rename(V1 = Gene_name) %>% unique()
   
@@ -29,6 +36,8 @@ fish_gens_dans_les_patients <- function(df_input, df_cART_ut, df_cART_st, df_cAR
   
   return(df_tous.mx)
 }
+
+**************************************************************
 
 gene_present_cancer_specific_type <- fish_gens_dans_les_patients(list_gene_cancer_specific_type, cART_untreat, cART_short, cART_long, long_term_EC)
 gene_present_signal_transduction <- fish_gens_dans_les_patients(list_gene_signal_transduction, cART_untreat, cART_short, cART_long, long_term_EC)
