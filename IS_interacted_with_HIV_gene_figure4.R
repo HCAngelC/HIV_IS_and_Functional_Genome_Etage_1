@@ -292,4 +292,14 @@ chisq.test(msigdb_cell_type_breakdown[, 8], msigdb_cell_type_breakdown[, 10])
 #data:  msigdb_cell_type_breakdown[, 8] and msigdb_cell_type_breakdown[, 10]
 #X-squared = 8.2797, df = 6, p-value = 0.2183
 **************************************************************************************************  
-  
+
+#8. r cluster heatmap cytokine breakdown list
+msigdb_cytokine_breakdown <- read.table("/media/chen/LaCie/MacBook_backup/Boulot/Projets/Moi/evoPATH/df/HIV_genes_interacted/MSigDB_cytokines_breakdown.tsv", header = T, stringsAsFactors = F)
+
+row.names(msigdb_cytokine_breakdown) <- msigdb_cytokine_breakdown$Cytokine
+msigdb_cytokine_breakdown$Cytokine <- NULL
+msigdb_cytokine_breakdown.mx <- data.matrix(msigdb_cytokine_breakdown, rownames.force = T)
+
+svg("/media/chen/LaCie/IGH_backup/evoPath/Add/msigdb_cytokine_breakdown.mx.svg", height = 5, width = 4.8)
+Heatmap(msigdb_cytokine_breakdown.mx, name = "Frequency", rect_gp = gpar(col = "black", lwd = 0.1), column_title = "clinical condition", row_title = "Cytokines", show_row_names = T, column_title_side = "bottom", row_dend_width = unit(4, "cm"), row_names_gp = gpar(fontsize = 10), column_names_gp = gpar(fontsize = 10))
+dev.off()
